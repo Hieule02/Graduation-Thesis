@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5" style="margin-top: 85px">
+            <div class="row">
+                <div class="col-sm-3 bg-light pt-4">
+                    <div class="text-center" style="margin: auto; width: 120px; height: 120px; background-color: darksalmon; border-radius: 50%">
+                        <h2 class="text-white" style="line-height: 120px" th:text="${user.username}"></h2>
+                    </div>
+                    <div style="margin: auto; width: 70%;" class="my-4">
+                        <p class="text-center">Xin chào <span style="color: blue">[[${user.username}]]</span></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/detail}"><i class="fa-solid fa-user"></i> Thông tin tài khoản</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/orders}"><i class="fa-solid fa-list-ul"></i> Quản lí đơn hàng</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/address}"><i class="fa-solid fa-location-dot"></i> Địa chỉ</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/logout}"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></p>
+                    </div>
+                </div>
+                <div class="col-sm-9 ps-5">
+                    <h3>THÔNG TIN TÀI KHOẢN</h3>
+                    <hr>
+                    <form method="POST" th:action="@{/users/update}" th:object="${user}">
+                        <input type="hidden" th:field="*{id}" readonly>
+                        <input type="hidden" th:field="*{roles}" readonly>
+                        <div class="card-body">
+                            <div class="input-group mb-3">
+                                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                                <input type="text" class="form-control col-sm-10" id="username" th:field="*{username}"
+                                       placeholder="Enter the name" autofocus>
+                                <p th:if="${#fields.hasErrors('username')}" class="text-danger mt-2"
+                                   th:errors="*{username}"></p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <label for="email" class="col-sm-2 col-form-label">Email</label>
+                                <input type="email" class="form-control col-sm-10" id="email" th:field="*{email}">
+                                <p th:if="${#fields.hasErrors('email')}" class="text-danger mt-2"
+                                   th:errors="*{email}"></p>
+                                <p th:if="${fail}" th:text="${fail}" class="text-danger"></p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <label for="phone" class="col-sm-2 col-form-label">Số điện thoại</label>
+                                <input type="text" class="form-control col-sm-10" id="phone" th:field="*{phone}">
+                                <p th:if="${#fields.hasErrors('phone')}" class="text-danger mt-2"
+                                   th:errors="*{phone}"></p>
+                            </div>
+                            <div class="text-center">
+                                <button id="submitBtn" class="btn btn-primary" type="submit">Cập nhật</button>
+                                <a class="btn btn-outline-danger" th:href="@{/users/detail}">Hủy</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

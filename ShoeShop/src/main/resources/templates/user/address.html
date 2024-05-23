@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5" style="margin-top: 85px">
+            <div class="row">
+                <div class="col-sm-3 bg-light pt-4"  style="height: fit-content; border-radius: 10px">
+                    <div class="text-center"
+                         style="margin: auto; width: 120px; height: 120px; background-color: darksalmon; border-radius: 50%">
+                        <h2 class="text-white" style="line-height: 120px" th:text="${user.username}"></h2>
+                    </div>
+                    <div style="margin: auto; width: 70%;" class="my-4">
+                        <p class="text-center">Xin chào <span style="color: blue">[[${user.username}]]</span></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/detail}"><i
+                                class="fa-solid fa-user"></i> Thông tin tài khoản</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/orders}"><i
+                                class="fa-solid fa-list-ul"></i> Quản lí đơn hàng</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/address}"><i
+                                class="fa-solid fa-location-dot"></i> Địa chỉ</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/logout}"><i
+                                class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></p>
+                    </div>
+                </div>
+                <div class="col-sm-9 ps-5">
+                    <h3>ĐỊA CHỈ</h3>
+                    <hr>
+
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                        aria-controls="flush-collapseOne">
+                                    Thêm địa chỉ
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <form method="post" th:action="@{/users/address/create}" th:object="${address}">
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <input th:field="*{province}" type="text" class="form-control" placeholder="Tỉnh/Thành phố" aria-label="First name">
+                                                <p th:if="${#fields.hasErrors('province')}" class="text-danger mt-2"
+                                                   th:errors="*{province}"></p>
+                                            </div>
+                                            <div class="col">
+                                                <input th:field="*{district}" type="text" class="form-control" placeholder="Huyện/Thị xã" aria-label="Last name">
+                                                <p th:if="${#fields.hasErrors('district')}" class="text-danger mt-2"
+                                                   th:errors="*{district}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <input th:field="*{commune}" type="text" class="form-control" placeholder="Xã/Phường" aria-label="First name">
+                                                <p th:if="${#fields.hasErrors('commune')}" class="text-danger mt-2"
+                                                   th:errors="*{commune}"></p>
+                                            </div>
+                                            <div class="col">
+                                                <input th:field="*{houseNumber}" type="text" class="form-control" placeholder="Số nhà" aria-label="Last name">
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Thêm</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div>
+                        <p th:if="${success}" th:text="${success}" class="text-success text-center"></p>
+                        <p th:if="${message}" th:text="${message}" class="text-danger text-center"></p>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tỉnh/Thành phố</th>
+                                <th scope="col">Huyện/Thị xã</th>
+                                <th scope="col">Xã/Phường</th>
+                                <th scope="col">Số nhà</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="address : ${user.addresses}">
+                                <th scope="row" th:text="${user.addresses.indexOf(address) + 1}"></th>
+                                <td th:text="${address.province}"></td>
+                                <td th:text="${address.district}"></td>
+                                <td th:text="${address.commune}"></td>
+                                <td th:text="${address.houseNumber}"></td>
+                                <td>
+                                    <a th:href="@{/users/address/delete(id=${address.id})}"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa?')"
+                                       class="btn btn-danger">Xóa</a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

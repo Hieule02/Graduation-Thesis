@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Sản phẩm</h1>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Cập nhật sản phẩm
+        </div>
+        <div class="p-3">
+            <form method="POST" th:action="@{/admin/products/edit}" enctype="multipart/form-data"
+                  th:object="${product}">
+                <div class="card-body">
+                    <input type="hidden" th:field="*{id}" readonly>
+                    <div class="input-group mb-3">
+                        <label for="name" class="col-sm-2 col-form-label">Tên</label>
+                        <span class="col-sm-10">
+                            <input type="text" class="form-control" id="name" th:field="*{name}"
+                                   placeholder="Tên sản phẩm" autofocus>
+                            <p th:if="${#fields.hasErrors('name')}" class="text-danger mt-2"
+                               th:errors="*{name}"></p>
+                        </span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="description" class="col-sm-2 col-form-label">Mô tả</label>
+                        <span class="col-sm-10">
+                            <textarea type="text" class="form-control" id="description" th:field="*{description}"
+                                      rows="3"></textarea>
+                        </span>
+                    </div>
+                    <div class=" input-group mb-3">
+                        <label for="quantity" class="col-sm-2 col-form-label">Số lượng</label>
+                        <span class="col-sm-10">
+                            <input type="number" step="1" class="form-control" id="quantity" th:field="*{quantity}">
+                            <p th:if="${#fields.hasErrors('quantity')}" class="text-danger mt-2"
+                               th:errors="*{quantity}"></p>
+                        </span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="price" class="col-sm-2 col-form-label">Giá</label>
+                        <span class="col-sm-10">
+                            <input type="number" step="1000" min="1000" class="form-control" id="price"
+                                   th:field="*{price}">
+                            <p th:if="${#fields.hasErrors('price')}" class="text-danger mt-2"
+                               th:errors="*{price}"></p>
+                        </span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="imageFile" class="col-sm-2 col-form-label">Hình ảnh</label>
+                        <span class="col-sm-10">
+                            <input type="file" accept="image/png, image/jpeg, image/jpg" class="form-control"
+                                   id="imageFile" name="imageFile">
+                        </span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="category" class="col-sm-2 col-form-label">Danh mục</label>
+                        <div class="col-sm-10">
+                            <select class="form-select w-100" id="category" th:field="*{category}">
+                                <option th:each="category : ${categories}" th:value="${category.id}">[[${category.title}]]
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="col-sm-2 col-form-label">Màu sắc</label>
+                        <div class="col-sm-10">
+                            <span class="mr-3" style="cursor: pointer" th:each="item : ${colors}">
+                                <input type="checkbox" th:field="*{colors}" th:value="${item.id}" th:id="${item.color}">
+                                <label th:for="${item.color}">[[${item.color}]]</label>
+                            </span>
+                            <p th:if="${#fields.hasErrors('colors')}" class="text-danger mt-2"
+                               th:errors="*{colors}"></p>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="col-sm-2 col-form-label">Kích cỡ</label>
+                        <div class="col-sm-10">
+                            <span class="mr-3" style="cursor: pointer" th:each="item1 : ${sizes}">
+                                <input type="checkbox" th:field="*{sizes}" th:value="${item1.id}" th:id="${item1.size}">
+                                <label th:for="${item1.size}">[[${item1.size}]]</label>
+                            </span>
+                            <p th:if="${#fields.hasErrors('sizes')}" class="text-danger mt-2"
+                               th:errors="*{sizes}"></p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="submitBtn" class="btn btn-primary" type="submit">Cập nhật</button>
+                        <a th:href="@{/admin/products}" class="btn btn-outline-danger">Hủy</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#description' ) )
+    </script>
+</main>
+
+</body>
+
+</html>

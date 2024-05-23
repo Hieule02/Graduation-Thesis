@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Người dùng</h1>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Thêm người dùng mới
+        </div>
+        <div class="p-3">
+            <form method="POST" th:action="@{/admin/users/create}" th:object="${user}">
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <label for="username" class="col-sm-2 col-form-label">Username</label>
+                        <input type="text" class="form-control col-sm-10" id="username" th:field="*{username}"
+                               placeholder="Enter the name" autofocus>
+                        <p th:if="${#fields.hasErrors('username')}" class="text-danger mt-2"
+                           th:errors="*{username}"></p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <input type="email" class="form-control col-sm-10" id="email" th:field="*{email}">
+                        <p th:if="${#fields.hasErrors('email')}" class="text-danger mt-2"
+                           th:errors="*{email}"></p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="phone" class="col-sm-2 col-form-label">Số điện thoại</label>
+                        <input type="text" class="form-control col-sm-10" id="phone" th:field="*{phone}">
+                        <p th:if="${#fields.hasErrors('phone')}" class="text-danger mt-2"
+                           th:errors="*{phone}"></p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="password" class="col-sm-2 col-form-label">Mật khẩu</label>
+                        <input type="password" class="form-control col-sm-10" id="password" th:field="*{password}">
+                        <p th:if="${#fields.hasErrors('password')}" class="text-danger mt-2"
+                           th:errors="*{password}"></p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="rePassword" class="col-sm-2 col-form-label">Xác nhận mật khẩu</label>
+                        <input type="password" class="form-control col-sm-10" id="rePassword" th:field="*{rePassword}">
+                        <p th:if="${#fields.hasErrors('rePassword')}" class="text-danger mt-2"
+                           th:errors="*{rePassword}"></p>
+                        <p class="text-danger mt-2" th:if="${rePasswordError}" th:text="${rePasswordError}"></p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="col-sm-2 col-form-label">Vai trò</label>
+                        <div class="col-sm-10">
+                            <span class="mr-3" th:each="item : ${roles}">
+                                <input type="checkbox" th:field="*{roles}" th:value="${item.id}" th:id="${item.name}">
+                                <label th:for="${item.name}">[[${item.name}]]</label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="submitBtn" class="btn btn-primary" type="submit">Thêm</button>
+                        <button class="btn btn-outline-dark" type="reset">Điền lại</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+</body>
+
+</html>

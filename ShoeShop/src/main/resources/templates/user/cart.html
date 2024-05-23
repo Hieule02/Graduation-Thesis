@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5" style="margin-top: 85px">
+            <div class="row">
+                <div class="col-sm-9 pe-3">
+                    <div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col" colspan="7"><h3>GIỎ HÀNG CỦA BẠN</h3></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr colspan="7" th:if="${fail}">
+                                <td th:text="${fail}" class="text-danger"></td>
+                            </tr>
+                            <tr th:each="cart : ${carts}">
+                                <td><img style="width: 100px" th:src="@{'/images/' + ${cart.image}}"></td>
+                                <td>
+                                    <p th:text="${cart.productName}"></p>
+                                    <p th:text="${cart.formatPrice(cart.price)}"></p>
+                                </td>
+                                <td>
+                                    <span>Màu sắc: [[${cart.color}]]</span>
+                                </td>
+                                <td>
+                                    <span>Cỡ: [[${cart.size}]]</span>
+                                </td>
+                                <td class="text-center">
+                                    <form method="post" th:action="@{/carts/update}">
+                                        <input style="width: 50px;" type="number" name="quantity"
+                                               th:value="${cart.quantity}" min="1" step="1"
+                                               onchange="this.parentNode.submit()">
+                                        <input type="hidden" name="productId" th:value="${cart.productId}">
+                                        <input type="hidden" name="color" th:value="${cart.color}">
+                                        <input type="hidden" name="size" th:value="${cart.size}">
+                                    </form>
+                                </td>
+                                <td th:text="${cart.formatPrice(cart.total)}"></td>
+                                <td><a onclick="return confirm('Bạn có chắc chắn muốn xóa?')"
+                                       th:href="@{/carts/delete(id=${cart.productId}, color=${cart.color}, size=${cart.size})}"
+                                       class="text-dark fs-5">
+                                    <i class="fa-solid fa-xmark"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <a th:href="@{/}" class="btn btn-secondary">Tiếp tục mua sắm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 bg-light pt-4" style="height: fit-content; border-radius: 10px">
+                    <h4>THÔNG TIN ĐƠN HÀNG</h4>
+                    <hr>
+                    <div>
+                        <p class="d-flex align-items-center justify-content-between">
+                            <span class="fw-bold">Tổng tiền:</span>
+                            <span class="fs-3 text-danger" th:text="${cartTotal}"></span>
+                        </p>
+                    </div>
+                    <hr>
+                    <div>
+                        <ul>
+                            <li>Phí vận chuyển sẽ được tính trong trang thanh toán</li>
+                        </ul>
+                    </div>
+                    <div class="d-grid gap-2 mb-3">
+                        <a th:href="@{/orders/checkout}" class="btn btn-danger">Đặt hàng ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

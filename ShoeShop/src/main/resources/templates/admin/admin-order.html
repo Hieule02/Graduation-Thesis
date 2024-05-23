@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Đơn hàng</h1>
+    <hr>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Danh sách đơn hàng
+        </div>
+        <div class="p-3">
+            <p th:if="${success}" class="text-success text-center" th:text="${success}"></p>
+            <p th:if="${fail}" class="text-danger text-center" th:text="${fail}"></p>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Người nhận</th>
+                    <th scope="col">Địa chỉ</th>
+                    <th scope="col">Tổng tiền hàng</th>
+                    <th scope="col">Phí vận chuyển</th>
+                    <th scope="col">Ngày order</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <th scope="row" th:text="${order.id}"></th>
+                    <td th:text="${order.receiverName}"></td>
+                    <td th:text="${order.receiverAddress}"></td>
+                    <td th:text="${order.formatPrice(order.productAmount)}"></td>
+                    <td th:text="${order.formatPrice(order.shippingFee)}"></td>
+                    <td>[[${order.createAt}]]</td>
+                    <td>[[${order.status}]]</td>
+                    <td>
+                        <a class="btn btn-info" th:href="@{/admin/orders/detail(id=${order.id})}">Chi tiết</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${orders.getNumber() > 0}">
+                            <a class="page-link" th:href="@{/admin/orders(page=${orders.getNumber() - 1})}"> << </a>
+                        </li>
+                        <li th:each="pageIndex: ${#numbers.sequence(1, orders.getTotalPages())}"
+                            th:classappend="${pageIndex - 1 == orders.getNumber()} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:text="${pageIndex}"
+                               th:href="@{/admin/orders(page=${pageIndex - 1})}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${orders.getNumber() < orders.getTotalPages() - 1}"
+                               th:href="@{/admin/orders(page=${orders.getNumber() + 1})}"
+                               class="page-link"> >> </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

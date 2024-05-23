@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5" style="margin-top: 85px">
+            <div class="row">
+                <div class="col-sm-3 bg-light pt-4"  style="height: fit-content; border-radius: 10px">
+                    <div class="text-center" style="margin: auto; width: 120px; height: 120px; background-color: darksalmon; border-radius: 50%">
+                        <h2 class="text-white" style="line-height: 120px" th:text="${user.username}"></h2>
+                    </div>
+                    <div style="margin: auto; width: 70%;" class="my-4">
+                        <p class="text-center">Xin chào <span style="color: blue">[[${user.username}]]</span></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/detail}"><i class="fa-solid fa-user"></i> Thông tin tài khoản</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/orders}"><i class="fa-solid fa-list-ul"></i> Quản lí đơn hàng</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/address}"><i class="fa-solid fa-location-dot"></i> Địa chỉ</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/logout}"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></p>
+                    </div>
+                </div>
+                <div class="col-sm-9 ps-5">
+                    <h3>ĐƠN HÀNG CỦA BẠN</h3>
+                    <hr>
+                    <p th:if="${#lists.isEmpty(orders)}">Bạn chưa có đơn hàng nào!</p>
+                    <div class="card mb-3" th:each="order : ${orders}">
+                        <h5 class="card-header text-end" th:text="${order.status}"></h5>
+                        <div class="card-body">
+                            <div th:each="item : ${order.orderDetails}" style="display: flex; align-items: center;justify-content: space-between;">
+                                <div>
+                                    <img style="width: 100px" th:src="'/images/' + ${item.image}">
+                                </div>
+                                <div style="width: 70%">
+                                    <h5 th:text="${item.productName}"></h5>
+                                    <p>Loại hàng: <span th:text="${item.color}+', '+${item.size}"></span></p>
+                                    <p>Số lượng: <span th:text="${item.quantity}"></span></p>
+                                </div>
+                                <div>
+                                    <span th:text="${item.formatPrice(item.price)}" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <a class="btn btn-danger"
+                                   th:if="${order.status == 'Đang giao hàng'}"
+                                   th:href="@{/orders/receive(id=${order.id})}">Đã nhận được hàng</a>
+                                <a class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn hủy?')"
+                                   th:if="${order.status == 'Chờ xác nhận'}"
+                                   th:href="@{/orders/cancel(id=${order.id})}">Hủy đơn hàng</a>
+                                <a></a>
+                                <p class="mb-0">
+                                    Thành tiền: <span class="text-danger fs-3" th:text="${order.formatPrice(order.productAmount + order.shippingFee)}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

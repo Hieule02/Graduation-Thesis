@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Màu sắc</h1>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Cập nhật màu sắc
+        </div>
+        <div class="p-3">
+            <form method="POST" th:action="@{/admin/colors/edit}" th:object="${color}">
+                <div class="card-body">
+                    <input type="hidden" th:field="*{id}" readonly>
+                    <div class="mb-3">
+                        <label for="role" class="form-label font-weight-bold">Màu sắc</label>
+                        <input type="text" class="form-control" id="role" th:field="*{color}"
+                               placeholder="Enter the name" autofocus>
+                        <p th:if="${#fields.hasErrors('color')}" class="text-danger mt-2"
+                           th:errors="*{color}"></p>
+                        <p th:if="${fail}" th:text="${fail}" class="text-danger mt-2"></p>
+                    </div>
+                    <div class="text-center">
+                        <button id="submitBtn" class="btn btn-primary" type="submit">Cập nhật</button>
+                        <a class="btn btn-outline-danger" th:href="@{/admin/colors}">Hủy</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</main>
+
+</body>
+
+</html>

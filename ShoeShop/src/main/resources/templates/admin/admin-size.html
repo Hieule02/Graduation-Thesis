@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Kích cỡ</h1>
+    <hr>
+    <div class="my-3 d-flex">
+        <form method="POST" th:action="@{/admin/sizes/create}">
+            <div class="input-group mb-3">
+                <button class="btn btn-primary" type="submit">Thêm mới</button>
+                <input required name="size" type="number" min="1" step="1" class="form-control" placeholder="Kích cỡ">
+            </div>
+        </form>
+    </div>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Danh sách cỡ
+        </div>
+        <div class="p-3">
+            <p th:if="${success}" class="text-success text-center" th:text="${success}"></p>
+            <p th:if="${fail}" class="text-danger text-center" th:text="${fail}"></p>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Kích cỡ</th>
+                    <th scope="col" style="width: 20%">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="size : ${sizes}">
+                    <th scope="row">[[${size.id}]]</th>
+                    <td>[[${size.size}]]</td>
+                    <td>
+                        <a class="btn btn-primary" th:href="@{/admin/sizes/edit(id=${size.id})}">Chỉnh sửa</a>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${sizes.getNumber() > 0}">
+                            <a class="page-link" th:href="@{/admin/sizes(page=${sizes.getNumber() - 1})}"> << </a>
+                        </li>
+                        <li th:each="pageIndex: ${#numbers.sequence(1, sizes.getTotalPages())}"
+                            th:classappend="${pageIndex - 1 == sizes.getNumber()} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:text="${pageIndex}"
+                               th:href="@{/admin/sizes(page=${pageIndex - 1})}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${sizes.getNumber() < sizes.getTotalPages() - 1}"
+                               th:href="@{/admin/sizes(page=${sizes.getNumber() + 1})}"
+                               class="page-link"> >> </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

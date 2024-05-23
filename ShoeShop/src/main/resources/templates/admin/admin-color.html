@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Màu sắc</h1>
+    <hr>
+
+    <div class="my-3 d-flex">
+        <form method="POST" th:action="@{/admin/colors/create}">
+            <div class="input-group mb-3">
+                <button class="btn btn-primary" type="submit">Thêm mới</button>
+                <input required name="color" type="text" class="form-control" placeholder="Màu sắc">
+            </div>
+        </form>
+    </div>
+
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Danh sách màu
+        </div>
+        <div class="p-3">
+            <p th:if="${success}" class="text-success text-center" th:text="${success}"></p>
+            <p th:if="${fail}" class="text-danger text-center" th:text="${fail}"></p>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Màu</th>
+                    <th scope="col" style="width: 20%">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="color : ${colors}">
+                    <th scope="row">[[${color.id}]]</th>
+                    <td>[[${color.color}]]</td>
+                    <td>
+                        <a class="btn btn-primary" th:href="@{/admin/colors/edit(id=${color.id})}">Chỉnh sửa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${colors.getNumber() > 0}">
+                            <a class="page-link" th:href="@{/admin/colors(page=${colors.getNumber() - 1})}"> << </a>
+                        </li>
+                        <li th:each="pageIndex: ${#numbers.sequence(1, colors.getTotalPages())}"
+                            th:classappend="${pageIndex - 1 == colors.getNumber()} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:text="${pageIndex}"
+                               th:href="@{/admin/colors(page=${pageIndex - 1})}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${colors.getNumber() < colors.getTotalPages() - 1}"
+                               th:href="@{/admin/colors(page=${colors.getNumber() + 1})}"
+                               class="page-link"> >> </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

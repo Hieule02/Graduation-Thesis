@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Sản phẩm</h1>
+    <hr>
+    <p class="text-center">
+        <a th:href="@{/admin/products/create}" class="btn btn-outline-dark">Thêm mới sản phẩm</a>
+    </p>
+    <hr>
+    <div>
+        <nav class="navbar bg-body-light px-3">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                    Sắp xếp
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" th:href="@{''(q=${param.q}, sort='createAt,desc')}">Mới nhất</a></li>
+                    <li><a class="dropdown-item" th:href="@{''(q=${param.q}, sort='createAt,asc')}">Cũ nhất</a></li>
+                    <li><a class="dropdown-item" th:href="@{''(q=${param.q}, sort='price,asc')}">Giá: thấp đến cao</a></li>
+                    <li><a class="dropdown-item" th:href="@{''(q=${param.q}, sort='price,desc')}">Giá: cao đến thấp</a></li>
+                </ul>
+            </div>
+            <form class="d-flex" role="search" method="get" th:action="@{''}">
+                <input class="form-control me-2" name="q" type="search" placeholder="Tên sản phẩm" aria-label="Search">
+                <button class="btn btn-outline-info" type="submit">Tìm</button>
+            </form>
+        </nav>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Danh sách sản phẩm
+        </div>
+        <div class="p-3">
+            <p th:if="${success}" class="text-success text-center" th:text="${success}"></p>
+            <p th:if="${fail}" class="text-danger text-center" th:text="${fail}"></p>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Ảnh</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Ngày tạo</th>
+                    <th scope="col">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <th scope="row">[[${product.id}]]</th>
+                    <td>
+                        <img  style="width: 100px" th:src="'/images/'+${product.image}" alt="Product Image">
+                    </td>
+                    <td>[[${product.name}]]</td>
+                    <td>[[${product.quantity}]]</td>
+                    <td th:text="${product.formatPrice()}"></td>
+                    <td>[[${product.createAt}]]</td>
+                    <td>
+                        <a class="btn btn-primary" th:href="@{/admin/products/edit(id=${product.id})}">Chỉnh sửa</a>
+                        <a class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')"
+                           th:href="@{/admin/products/delete(id=${product.id})}">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <nav aria-label="..." th:if="${products.totalPages > 0}">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${products.getNumber() > 0}">
+                            <a class="page-link" th:href="@{/admin/products(page=${products.getNumber() - 1})}"> << </a>
+                        </li>
+                        <li th:each="pageIndex: ${#numbers.sequence(1, products.getTotalPages())}"
+                            th:classappend="${pageIndex - 1 == products.getNumber()} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:text="${pageIndex}"
+                               th:href="@{/admin/products(page=${pageIndex - 1})}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${products.getNumber() < products.getTotalPages() - 1}"
+                               th:href="@{/admin/products(page=${products.getNumber() + 1})}"
+                               class="page-link"> >> </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

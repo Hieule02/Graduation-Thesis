@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+<main layout:fragment="main">
+    <h1>Chi tiết đơn hàng</h1>
+    <hr>
+    <p th:if="${success}" class="text-center text-success" th:text="${success}"></p>
+    <div class="card mb-3">
+        <div class="card-header" style="display: flex; justify-content: space-between">
+            <h5 th:text="${order.status}"></h5>
+            <a class="btn btn-info"
+               th:if="${#strings.equals(order.status, 'Chờ xác nhận')}"
+               th:href="@{/admin/orders/confirm(id=${order.id})}">
+                Xác nhận đơn hàng
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div th:each="item : ${order.orderDetails}" style="display: flex; align-items: center;justify-content: space-between;">
+                <div>
+                    <img style="width: 100px" th:src="'/images/' + ${item.image}">
+                </div>
+                <div style="width: 70%">
+                    <h5 th:text="${item.productName}"></h5>
+                    <p>Loại hàng: <span th:text="${item.color}+', '+${item.size}"></span></p>
+                    <p>Số lượng: <span th:text="${item.quantity}"></span></p>
+                </div>
+                <div>
+                    <span th:text="${item.formatPrice(item.price)}" class="text-danger"></span>
+                </div>
+            </div>
+            <hr>
+            <div style="display: flex; justify-content: space-between">
+                <div>
+                    <p>Người nhận: <span th:text="${order.receiverName}"></span></p>
+                    <p>SĐT: <span th:text="${order.receiverPhone}"></span></p>
+                </div>
+                <div style="width: 50%;">
+                    <p th:text="${'Địa chỉ: ' + order.receiverAddress}"></p>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <p>Phương thức thanh toán: <span th:text="${order.paymentMethod}"></span></p>
+            </div>
+            <hr>
+            <div>
+                <p class="text-right">
+                    Tiền hàng: <span class="text-danger" th:text="${order.formatPrice(order.productAmount)}"></span>
+                </p>
+                <p class="text-right">
+                    Phí vận chuyển: <span class="text-danger" th:text="${order.formatPrice(order.shippingFee)}"></span>
+                </p>
+                <p class="text-right">
+                    Thành tiền: <span class="text-danger" style="font-size: 30px" th:text="${order.formatPrice(order.productAmount + order.shippingFee)}"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0"
+                                           th:src="'/images/' + ${product.image}" alt="..."></div>
+                <div class="col-md-6">
+                    <h1 class="display-5 fw-bolder" th:text="${product.name}"></h1>
+                    <div class="fs-5 mb-2">
+                        <span th:text="${product.formatPrice()}"></span>
+                    </div>
+                    <div class="fs-5 mb-5 fs-6">
+                        <span th:text="${product.ratedTimes == 0} ? '' : ${#numbers.formatDecimal(product.totalRate * 1.0/product.ratedTimes, 1, 1)}"></span>
+                        <i class="fa-solid fa-star" style="color: yellow"></i>
+                        <span th:text="${' (' + product.ratedTimes + ' lượt đánh giá)'}"></span> |
+                        <span th:text="${' Đã bán: ' + product.soldQuantity}"></span>
+                        <p th:text="${product.quantity > 0} ? 'Còn hàng('+${product.quantity}+')' : 'Hết hàng'"></p>
+                    </div>
+                    <p th:utext="${product.description}"></p>
+                    <form method="post" th:action="@{/carts/add}">
+                        <input type="hidden" name="productId" th:value="${product.id}" readonly>
+                        <div>
+                            <div class="btn-group my-2" role="group" aria-label="Basic radio toggle button group">
+                            <span class="me-2" th:each="item : ${product.sizes}">
+                                <input name="size" type="radio" class="btn-check" th:value="${item.size}"
+                                       th:id="${item.size}" required>
+                                <label class="btn btn-outline-secondary" th:for="${item.size}">[[${item.size}]]</label>
+                            </span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="btn-group my-2" role="group" aria-label="Basic radio toggle button group">
+                            <span class="me-2" th:each="item1 : ${product.colors}">
+                                <input name="color" type="radio" class="btn-check" th:value="${item1.color}"
+                                       th:id="${item1.color}" required>
+                                <label class="btn btn-outline-secondary"
+                                       th:for="${item1.color}">[[${item1.color}]]</label>
+                            </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <input class="form-control text-center me-3" id="inputQuantity" type="number" value="1"
+                                   style="max-width: 5rem" name="quantity" min="1" th:max="${product.quantity}">
+                            <button class="btn btn-outline-dark flex-shrink-0" type="submit"
+                                    th:if="${product.quantity > 0}">
+                                <i class="bi-cart-fill me-1"></i>
+                                Thêm vào giỏ hàng
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row my-5">
+                <p th:if="${success}" th:text="${success}" class="text-center text-success"></p>
+                <div class="col-md-3">
+                    <div class="card">
+                        <h5 class="card-header">Viết đánh giá</h5>
+                        <div class="card-body">
+                            <form method="post" th:action="@{/products/review}">
+                                <input type="hidden" name="productId" th:value="${product.id}" readonly>
+                                <div class="full-star-ratings mb-3" data-rateyo-full-star="true"></div>
+                                <input type="hidden" name="rating" id="rating" readonly>
+                                <div class="mb-3">
+                                    <label for="inputAddress" class="form-label">Nhận xét</label>
+                                    <textarea name="review" rows="5" class="form-control" id="inputAddress"></textarea>
+                                </div>
+                                <div class="text-center"  sec:authorize="isAnonymous()">
+                                    <a th:href="@{/login}" class="btn btn-primary">Đăng nhập để đánh giá</a>
+                                </div>
+                                <div class="text-center"  sec:authorize="isAuthenticated()">
+                                    <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-9">
+                    <div class="card">
+                        <h5 class="card-header bg-primary text-white">Đánh giá sản phẩm</h5>
+                        <div class="card-body border-bottom" th:each="review : ${reviews}">
+                            <h5 class="card-title">
+                                <span th:text="${review.user.username}"></span> |
+                                <span th:text="${review.rating}"></span>
+                                <i class="fa-solid fa-star" style="color: yellow"></i>
+                            </h5>
+                            <p class="card-text" th:text="${review.review}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-5 bg-light">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="fw-bolder mb-4">Sản phẩm liên quan</h2>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <div class="col mb-5" th:each="product : ${relatedProducts}">
+                    <div class="card h-100">
+                        <a th:href="@{/products/detail(id=${product.id})}">
+                            <img class="card-img-top" th:src="'/images/' + ${product.image}" alt="...">
+                        </a>
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <a class="fw-bolder" style="text-decoration: none; color: black"
+                                   th:text="${product.name}"
+                                   th:href="@{/products/detail(id=${product.id})}"></a>
+                                <p th:text="${product.formatPrice()}"></p>
+                                <p>
+                                    <span th:text="${product.ratedTimes == 0} ? '' : ${#numbers.formatDecimal(product.totalRate * 1.0/product.ratedTimes, 1, 1)}"></span>
+                                    <i th:if="${product.ratedTimes > 0}" class="fa-solid fa-star" style="color: yellow"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <a th:href="@{/products/detail(id=${product.id})}" class="btn btn-secondary">Chi
+                                    tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $('.full-star-ratings').rateYo({
+            rating: 1
+        });
+        $('.full-star-ratings').rateYo().on("rateyo.set", function (e, data) {
+            $("#rating").attr("value", data.rating);
+        });
+    </script>
+</main>
+</body>
+</html>

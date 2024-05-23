@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <div class="container" style="margin-top: 60px; margin-bottom: 50px">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card shadow-lg border-1 rounded-lg mt-5">
+                    <div class="card">
+                        <div class="text-center card-header display-6">
+                            Đăng Kí
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/users/register}" th:object="${user}" method="post">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label ms-2">Username</label>
+                                    <input type="text" class="form-control"
+                                           id="username" th:field="*{username}">
+                                </div>
+                                <p th:if="${#fields.hasErrors('username')}" class="text-danger mt-2"
+                                   th:errors="*{username}"></p>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label ms-2">Email</label>
+                                    <input type="email" class="form-control"
+                                           id="email" th:field="*{email}">
+                                </div>
+                                <p th:if="${#fields.hasErrors('email')}" class="text-danger mt-2"
+                                   th:errors="*{email}"></p>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label ms-2">Số điện thoại</label>
+                                    <input type="text" class="form-control"
+                                           id="phone" th:field="*{phone}">
+                                </div>
+                                <p th:if="${#fields.hasErrors('phone')}" class="text-danger mt-2"
+                                   th:errors="*{phone}"></p>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label ms-2">Mật khẩu</label>
+                                    <input type="password" class="form-control"
+                                           id="password" th:field="*{password}">
+                                </div>
+                                <p th:if="${#fields.hasErrors('password')}" class="text-danger mt-2"
+                                   th:errors="*{password}"></p>
+                                <div class="mb-3">
+                                    <label for="rePassword" class="form-label ms-2">Xác nhận mật khẩu</label>
+                                    <input type="password" class="form-control"
+                                           id="rePassword" th:field="*{rePassword}">
+                                </div>
+                                <p th:if="${#fields.hasErrors('rePassword')}" class="text-danger mt-2"
+                                   th:errors="*{rePassword}"></p>
+                                <p class="text-danger mt-2" th:if="${rePasswordError}" th:text="${rePasswordError}"></p>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Đăng kí</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="small mx-3 mb-3"><a th:href="@{/login}">Đã có tài khoản? Đăng nhập!</a></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

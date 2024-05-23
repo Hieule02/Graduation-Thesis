@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <div class="container-fluid" style="margin-top: 85px; padding: 0">
+        <div style="height: 150px; background-color: black; position: relative">
+            <h2 style="color: white; position: absolute; top: 50%; left: 50%;transform: translate(-50%, -50%);">
+                THANH TOÁN
+            </h2>
+        </div>
+    </div>
+    <section class="mt-3">
+        <div class="container px-4 px-lg-5">
+            <div class="mb-4">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="fs-5">Sản phẩm</th>
+                        <th scope="col">Đơn giá</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Thành tiền</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="cart : ${carts}">
+                        <td style="display: flex">
+                            <div>
+                                <img style="width: 100px" th:src="'/images/'+${cart.image}">
+                            </div>
+                            <div class="p-3">
+                                <p th:text="${cart.productName}"></p>
+                                <p>Loại: [[${cart.color} + ', ' + ${cart.size}]]</p>
+                            </div>
+                        </td>
+                        <td th:text="${cart.formatPrice(cart.price)}"></td>
+                        <td th:text="${cart.quantity}"></td>
+                        <td th:text="${cart.formatPrice(cart.total)}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <div class="card">
+                    <form method="post" th:action="@{/orders/create}">
+                        <h5 class="card-header">Địa chỉ nhận hàng</h5>
+                        <div class="card-body">
+                            <div style="display: flex; justify-content: space-between">
+                                <div>
+                                    <h5 class="card-title" th:text="${'Người nhận: ' + user.username}"></h5>
+                                    <h5 class="card-title" th:text="${'SĐT: ' + user.phone}"></h5>
+                                </div>
+                                <div style="width: 50%">
+                                    <select class="form-select" name="address">
+                                        <option th:each="address : ${user.addresses}"
+                                                th:value="${address.houseNumber+' '+address.commune+', '+address.district+', '+address.province}">
+                                            [[${address.houseNumber+' '+address.commune+', '+address.district+',
+                                            '+address.province}]]
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="card-header border-top" style="display: flex; justify-content: space-between; align-items: baseline">
+                                <h5>Phương thức thanh toán</h5>
+                                <div>
+                                    <input type="radio" class="btn-check" checked name="paymentMethod" id="cod" value="Thanh toán khi nhận hàng">
+                                    <label class="btn btn-outline-danger" for="cod">Thanh toán khi nhận hàng</label>
+                                </div>
+                                <div>
+                                    <input type="radio" class="btn-check" name="paymentMethod" id="onlinePayment" value="Thanh toán online">
+                                    <label class="btn btn-outline-danger" for="onlinePayment">Thanh toán online</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom" style="display: none" id="qrcode">
+                            <div class="card-body" style="display: flex; justify-content: space-between; align-items: center">
+                                <img style="width: 300px" src="/images/qr/Qr-code.jpg">
+                                <div class="text-end">
+                                    <p>Người thụ hưởng: Lê Văn Hiếu</p>
+                                    <p>Nội dung chuyển khoản: Thanh toán đơn hàng + tên tài khoản</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border-bottom mx-0">
+                            <div class="col-md-4 ms-auto p-4">
+                                <div style="display: flex; justify-content: space-between">
+                                    <p>Tổng tiền hàng:</p>
+                                    <p th:text="${cartTotal}"></p>
+                                </div>
+                                <div style="display: flex; justify-content: space-between">
+                                    <p>Phí vận chuyển:</p>
+                                    <p th:text="${shippingFee}"></p>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: baseline">
+                                    <p>Tổng thanh toán:</p>
+                                    <p th:text="${totalAmount}" class="text-danger fs-3"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end p-4">
+                            <button type="submit" class="btn btn-danger fs-4" style="width: 200px">Đặt hàng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $("#cod").click(function () {
+            $("#qrcode").css("display", "none");
+        })
+        $("#onlinePayment").click(function () {
+            $("#qrcode").css("display", "block");
+        })
+    </script>
+</main>
+</body>
+</html>

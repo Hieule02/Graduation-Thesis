@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{user-layout}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<main layout:fragment="main">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5" style="margin-top: 85px">
+            <div class="row">
+                <div class="col-sm-3 bg-light pt-4"  style="height: fit-content; border-radius: 10px">
+                    <div class="text-center" style="margin: auto; width: 120px; height: 120px; background-color: darksalmon; border-radius: 50%">
+                        <h2 class="text-white" style="line-height: 120px;" th:text="${user.username}"></h2>
+                    </div>
+                    <div style="margin: auto; width: 70%;" class="my-4">
+                        <p class="text-center">Xin chào <span style="color: blue">[[${user.username}]]</span></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/detail}"><i class="fa-solid fa-user"></i> Thông tin tài khoản</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/orders}"><i class="fa-solid fa-list-ul"></i> Quản lí đơn hàng</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/users/address}"><i class="fa-solid fa-location-dot"></i> Địa chỉ</a></p>
+                        <p><a style="text-decoration: none" class="link-dark" th:href="@{/logout}"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></p>
+                    </div>
+                </div>
+                <div class="col-sm-9 ps-5">
+                    <h3>THÔNG TIN TÀI KHOẢN</h3>
+                    <hr>
+                    <div class="row mb-3">
+                        <span class="col-sm-2">Tên tài khoản</span>
+                        <div class="col-sm-10">
+                            <p th:text="${user.username}"></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <span class="col-sm-2">Email</span>
+                        <div class="col-sm-10">
+                            <p th:text="${user.email}"></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <span class="col-sm-2">Số điện thoại</span>
+                        <div class="col-sm-10">
+                            <p th:text="${user.phone}"></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <span class="col-sm-2">Địa chỉ</span>
+                        <div class="col-sm-10">
+                            <p th:each="address : ${user.addresses}"
+                               th:text="${address.houseNumber + ' ' + address.commune + ', ' + address.district + ', ' + address.province}"></p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <a th:href="@{/users/update}" class="btn btn-primary">Cập nhật thông tin tài khoản</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

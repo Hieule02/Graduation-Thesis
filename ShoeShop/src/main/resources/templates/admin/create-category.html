@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz./thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+
+
+<main layout:fragment="main">
+    <h1>Danh mục sản phẩm</h1>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Thêm mới danh mục
+        </div>
+        <div class="p-3">
+            <form method="POST" th:action="@{/admin/categories/create}" th:object="${category}">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label font-weight-bold">Danh mục</label>
+                        <input type="text" class="form-control" id="title" th:field="*{title}"
+                               placeholder="Nhập tên danh mục" autofocus>
+                        <p th:if="${#fields.hasErrors('title')}" class="text-danger mt-2"
+                           th:errors="*{title}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label font-weight-bold">Mô tả</label>
+                        <textarea class="form-control" rows="3" id="description"
+                                  th:field="*{description}"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button id="submitBtn" class="btn btn-primary" type="submit">Thêm</button>
+                        <button class="btn btn-outline-dark" type="reset">Điền lại</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#description' ) )
+    </script>
+</main>
+</body>
+
+</html>
