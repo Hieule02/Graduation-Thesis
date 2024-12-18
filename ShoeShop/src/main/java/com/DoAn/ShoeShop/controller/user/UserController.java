@@ -48,12 +48,12 @@ public class UserController {
         if (!userRequest.getPassword().equals(userRequest.getRePassword())) {
             modelMap.addAttribute("user", userRequest);
             modelMap.addAttribute("rePasswordError", "Confirm password is not equal to password!");
-            return "admin/create-user";
+            return "user/register";
         }
         userRequest.setRoles(new ArrayList<>());
         userService.save(userRequest);
         redirectAttributes.addFlashAttribute("success", "Đăng kí thành công!");
-        return "redirect:/users/login";
+        return "redirect:/login";
     }
 
     @GetMapping("/detail")
